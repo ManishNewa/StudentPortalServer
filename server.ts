@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import path from 'path'
-import apiRoutes from '../routes/api'
+import apiRoutes from './routes/api'
 
 const app = express()
 const PORT = process.env.PORT || 3000;

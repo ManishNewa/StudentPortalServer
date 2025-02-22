@@ -1,14 +1,15 @@
-export const enum UserRole {
+export enum UserRole {
+    GUEST = 'guest',
     STUDENT = 'student',
     LANDLORD = 'landlord',
     EMPLOYER = 'employer',
     ADMIN = 'admin',
-    SUPERADMIN = 'superadmin'
+    SUPERADMIN = 'superadmin',
 }
 
-export const enum AuthProvider {
+export enum AuthProvider {
     LOCAL = 'local',
     GOOGLE = 'google',
     FACEBOOK = 'facebook',
-    WHATSAPP = 'whatsapp'
+    WHATSAPP = 'whatsapp',
 }

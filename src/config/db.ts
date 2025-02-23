@@ -1,15 +1,16 @@
-import { DataSource } from 'typeorm';
-import 'dotenv/config';
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
 
-export const AppDataSource = new DataSource({
-    type: 'mysql',
+dotenv.config();
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME!,
+  process.env.DB_USER!,
+  process.env.DB_PASSWORD,
+  {
     host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '3306'),
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: process.env.NODE_ENV === 'development',
-    logging: true,
-    entities: ['models/**/*.ts'],
-    migrations: ['migrations/**/*.ts'],
-});
+    dialect: 'mysql',
+  }
+);
+
+export default sequelize;

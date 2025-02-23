@@ -44,7 +44,7 @@ User.init(
         },
         authProvider: {
             type: DataTypes.ENUM(...Object.values(AuthProvider)),
-            allowNull: false,
+            defaultValue: AuthProvider.LOCAL,
         },
         providerId: {
             type: DataTypes.STRING,

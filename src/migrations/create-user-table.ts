@@ -28,7 +28,7 @@ module.exports = {
             },
             authProvider: {
                 type: Sequelize.ENUM(...Object.values(AuthProvider)),
-                allowNull: true,
+                defaultValue: AuthProvider.LOCAL,
             },
             providerId: {
                 type: Sequelize.STRING,

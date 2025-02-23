@@ -4,27 +4,45 @@ import AuthService from '../services/auth-service';
 class AuthController {
     async register(req: Request, res: Response) {
         try {
-            const user = await AuthService.createUser(req.body);
-            res.status(201).json(user);
-        } catch (error: any) {
-            res.status(400).json({
-                error: error.errors[0]?.message ?? error.message,
+            const { email, password, phone, role, authProvider, providerId } =
+                req.body;
+            const user = await AuthService.register(
+                email,
+                password,
+                phone,
+                role,
+                authProvider,
+                providerId,
+            );
+            res.status(201).json({
+                message: 'User registered successfully',
+                user,
             });
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
         }
     }
 
     async login(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
-            const user = await AuthService.findUserByEmail(email);
-            if (
-                !user ||
-                !(await AuthService.validatePassword(user, password))
-            ) {
-                return res.status(401).json({ error: 'Invalid credentials' });
+            const { user, token } = await AuthService.login(email, password);
+            res.json({ message: 'Login successful', user, token });
+        } catch (error: any) {
+            res.status(401).json({ error: error.message });
+        }
+    }
+
+    async verify(req: Request, res: Response) {
+        try {
+            const { userId } = req.params;
+            console.log(userId);
+            const user = await AuthService.verifyUser(Number(userId));
+            if (user) {
+                res.json({ message: 'User verified successfully', user });
+            } else {
+                res.status(404).json({ error: 'User not found' });
             }
-            const token = AuthService.generateToken(user);
-            res.json({ token });
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }

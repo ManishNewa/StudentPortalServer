@@ -1,26 +1,48 @@
-import User from '../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+import User from '../models/User';
+
 dotenv.config();
 
 class AuthService {
-    async createUser(userData: any) {
-        if (userData.password) {
-            userData.password = await bcrypt.hash(userData.password, 10);
+    // Register a new user
+    async register(
+        email: string,
+        password: string,
+        phone: string,
+        role: string,
+        authProvider: string,
+        providerId?: string,
+    ) {
+        const hashedPassword = password
+            ? await bcrypt.hash(password, 10)
+            : null;
+        const user = await User.create({
+            email,
+            password: hashedPassword,
+            phone,
+            role,
+            authProvider,
+            providerId,
+            verified: false, // Default to false
+            verificationToken: null, // Can be set later
+        });
+        return user;
+    }
+
+    // Login a user
+    async login(email: string, password: string) {
+        const user = await User.findOne({ where: { email } });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            throw new Error('Invalid credentials');
         }
-        return await User.create(userData);
+        const token = this.generateToken(user);
+        return { user, token };
     }
 
-    async findUserByEmail(email: string) {
-        return await User.findOne({ where: { email } });
-    }
-
-    async validatePassword(user: User, password: string) {
-        return await bcrypt.compare(password, user.password);
-    }
-
+    // Generate JWT token
     generateToken(user: User) {
         return jwt.sign(
             { id: user.id, email: user.email },
@@ -29,6 +51,21 @@ class AuthService {
                 expiresIn: '1h',
             },
         );
+    }
+
+    // Find user by email
+    async findUserByEmail(email: string) {
+        return await User.findOne({ where: { email } });
+    }
+
+    // Verify user (mark as verified)
+    async verifyUser(userId: number) {
+        const user = await User.findByPk(userId);
+        if (user) {
+            user.verified = true;
+            await user.save();
+        }
+        return user;
     }
 }
 

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express, { Request, Response } from 'express';
 import { AppDataSource } from './config/db';
 import path from 'path';

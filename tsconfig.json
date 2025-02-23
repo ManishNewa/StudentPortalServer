@@ -10,7 +10,8 @@
         "preserveConstEnums": false,
         "forceConsistentCasingInFileNames": true,
         "experimentalDecorators": true,
-        "strictPropertyInitialization": false
+        "strictPropertyInitialization": false,
+        "emitDecoratorMetadata": true
     },
     "include": ["src/**/*", "server.ts"],
     "exclude": ["node_modules"]

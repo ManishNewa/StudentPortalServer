@@ -1,70 +1,68 @@
-import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    BaseEntity,
-    Index,
-    OneToMany,
-} from 'typeorm';
+import { DataTypes, Model } from 'sequelize';
 
-import { OTP } from './Otp';
-
+import sequelize from '../config/db';
 import { UserRole, AuthProvider } from '../constants/enums';
 
-@Entity()
-export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+class User extends Model {
+    public id!: number;
+    public email!: string;
+    public password!: string;
+    public phone!: string;
+    public role!: UserRole;
+    public authProvider!: AuthProvider;
+    public providerId!: string;
+    public verified!: boolean;
+    public verificationToken!: string;
 
-    @Column({
-        nullable: true,
-        unique: true,
-    })
-    @Index()
-    email: string;
-
-    @Column({
-        nullable: true,
-    })
-    password: string;
-
-    @Column({
-        nullable: true,
-        unique: true,
-    })
-    @Index()
-    phone: string;
-
-    @Column({
-        type: 'enum',
-        enum: UserRole,
-        default: UserRole.GUEST,
-    })
-    role: UserRole;
-
-    @Column({
-        type: 'enum',
-        enum: AuthProvider,
-        default: AuthProvider.LOCAL,
-    })
-    provider: AuthProvider;
-
-    @Column({
-        nullable: true,
-    })
-    providerId: string;
-
-    @Column({
-        default: false,
-    })
-    verified: boolean;
-
-    @Column({
-        nullable: true,
-    })
-    verificationToken: string;
-
-    // One-to-Many relationship with OTP
-    @OneToMany(() => OTP, (otp) => otp.user)
-    otps!: OTP[];
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
 }
+
+User.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        phone: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        role: {
+            type: DataTypes.ENUM(...Object.values(UserRole)),
+            defaultValue: UserRole.GUEST,
+        },
+        authProvider: {
+            type: DataTypes.ENUM(...Object.values(AuthProvider)),
+            allowNull: false,
+        },
+        providerId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        verified: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        verificationToken: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+    },
+    {
+        sequelize,
+        modelName: 'User',
+    },
+);
+
+export default User;

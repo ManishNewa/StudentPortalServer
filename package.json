@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "dev": "nodemon --exec ts-node server.ts",
+    "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
-    "migrate": "typeorm-ts-node-commonjs migration:run -d config/db.ts"
+    "start": "node dist/server.js",
+    "migrate": "typeorm-ts-node-commonjs migration:run -d src/config/db.ts"
   },
   "keywords": [
     "Student Portal"

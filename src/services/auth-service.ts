@@ -7,8 +7,6 @@ import EmailService from './email-service';
 
 import User from '../models/User';
 
-dotenv.config();
-
 class AuthService {
     // Register a new user
     async register(

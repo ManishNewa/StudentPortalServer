@@ -46,6 +46,28 @@ class AuthController {
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
+    } // Google login/register
+    async googleLogin(req: Request, res: Response) {
+        try {
+            const { idToken } = req.body;
+            const { user, token } = await AuthService.googleLogin(idToken);
+            res.json({ message: 'Google login successful', user, token });
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
+    // Facebook login/register
+    async facebookLogin(req: Request, res: Response) {
+        try {
+            const { accessToken } = req.body;
+            const { user, token } = await AuthService.facebookLogin(
+                accessToken,
+            );
+            res.json({ message: 'Facebook login successful', user, token });
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
     }
 }
 

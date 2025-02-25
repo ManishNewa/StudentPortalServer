@@ -2,6 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+import GoogleService from './google-service';
+import FacebookService from './facebook-service';
+
 import User from '../models/User';
 
 dotenv.config();
@@ -40,6 +43,15 @@ class AuthService {
         }
         const token = this.generateToken(user);
         return { user, token };
+    }
+    // Google login/register
+    async googleLogin(idToken: string) {
+        return await GoogleService.googleLogin(idToken);
+    }
+
+    // Facebook login/register
+    async facebookLogin(accessToken: string) {
+        return await FacebookService.facebookLogin(accessToken);
     }
 
     // Generate JWT token

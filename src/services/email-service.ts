@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { Op } from 'sequelize';
 
+import Otp from '../models/Otp';
 import UserModel from '../models/User';
 import AuthService from './auth-service';
 
@@ -19,39 +21,70 @@ class EmailService {
     // Send OTP via email
     async sendOtp(email: string) {
         try {
-            const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+            // Find or create the user
+            let user = await UserModel.findOne({ where: { email } });
+            if (!user) {
+                user = await UserModel.create({
+                    email,
+                    authProvider: 'EMAIL',
+                    providerId: email,
+                    verified: false,
+                });
+            }
 
+            // Generate a 6-digit OTP
+            const otpCode = Math.floor(
+                100000 + Math.random() * 900000,
+            ).toString();
+
+            // Set expiry time to 10 minutes from now
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+            // Save the OTP in the database
+            const otp = await Otp.create({
+                userId: user.id,
+                code: otpCode,
+                expiresAt,
+                isUsed: false,
+            });
+
+            // Send the OTP via email
             const mailOptions = {
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: 'Your OTP Code',
-                text: `Your OTP is: ${otp}`,
+                text: `Your OTP is: ${otpCode}`,
             };
 
             await transporter.sendMail(mailOptions);
-            return otp;
-        } catch (error) {
+            return { message: 'OTP sent successfully', otpId: otp.id };
+        } catch (error: any) {
             throw new Error('Failed to send OTP via email');
         }
     }
 
     // Verify OTP and login/register
-    async verifyOtp(email: string, otp: string) {
+    async verifyOtp(email: string, otpCode: string) {
         try {
-            // Check if user already exists
-            let user = await UserModel.findOne({
-                where: { email, authProvider: 'EMAIL' },
+            // Find the user
+            const user = await UserModel.findOne({ where: { email } });
+            if (!user) throw new Error('User not found');
+
+            // Find the OTP
+            const otp = await Otp.findOne({
+                where: {
+                    userId: user.id,
+                    code: otpCode,
+                    isUsed: false,
+                    expiresAt: { [Op.gt]: new Date() },
+                },
             });
 
-            if (!user) {
-                // Register new user
-                user = await UserModel.create({
-                    email,
-                    authProvider: 'EMAIL',
-                    providerId: email, // Use email as providerId
-                    verified: true, // OTP verification confirms the user
-                });
-            }
+            if (!otp) throw new Error('Invalid or expired OTP');
+
+            // Mark the OTP as used
+            otp.isUsed = true;
+            await otp.save();
 
             // Generate JWT token
             const token = AuthService.generateToken(user);

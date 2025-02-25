@@ -69,6 +69,28 @@ class AuthController {
             res.status(400).json({ error: error.message });
         }
     }
+
+    // Send OTP via email
+    async sendOtp(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+            const otp = await AuthService.sendOtp(email);
+            res.json({ message: 'OTP sent successfully', otp });
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
+    // Verify OTP and login/register
+    async verifyOtp(req: Request, res: Response) {
+        try {
+            const { email, otp } = req.body;
+            const { user, token } = await AuthService.verifyOtp(email, otp);
+            res.json({ message: 'OTP verified successfully', user, token });
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
 }
 
 export default new AuthController();

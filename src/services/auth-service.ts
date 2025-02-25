@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 import GoogleService from './google-service';
 import FacebookService from './facebook-service';
+import EmailService from './email-service';
 
 import User from '../models/User';
 
@@ -52,6 +53,16 @@ class AuthService {
     // Facebook login/register
     async facebookLogin(accessToken: string) {
         return await FacebookService.facebookLogin(accessToken);
+    }
+
+    // Send OTP via email
+    async sendOtp(email: string) {
+        return await EmailService.sendOtp(email);
+    }
+
+    // Verify OTP and login/register
+    async verifyOtp(email: string, otp: string) {
+        return await EmailService.verifyOtp(email, otp);
     }
 
     // Generate JWT token

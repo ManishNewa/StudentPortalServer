@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import GoogleService from './google-service';
 import FacebookService from './facebook-service';
-import EmailService from './email-service';
+import OtpService from './otp-service';
 
 import User from '../models/User';
 
@@ -54,12 +54,12 @@ class AuthService {
 
     // Send OTP via email
     async sendOtp(email: string) {
-        return await EmailService.sendOtp(email);
+        return await OtpService.sendOtp(email);
     }
 
     // Verify OTP and login/register
     async verifyOtp(email: string, otp: string) {
-        return await EmailService.verifyOtp(email, otp);
+        return await OtpService.verifyOtp(email, otp);
     }
 
     // Generate JWT token

@@ -1,12 +1,9 @@
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
 import { Op } from 'sequelize';
 
 import Otp from '../models/Otp';
 import UserModel from '../models/User';
 import AuthService from './auth-service';
-
-dotenv.config();
 
 // Create a transporter for sending emails
 const transporter = nodemailer.createTransport({

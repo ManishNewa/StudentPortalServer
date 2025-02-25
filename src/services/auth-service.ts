@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 
 import GoogleService from './google-service';
 import FacebookService from './facebook-service';

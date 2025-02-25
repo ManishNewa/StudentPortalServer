@@ -1,9 +1,4 @@
 import nodemailer from 'nodemailer';
-import { Op } from 'sequelize';
-
-import Otp from '../models/Otp';
-import UserModel from '../models/User';
-import AuthService from './auth-service';
 
 // Create a transporter for sending emails
 const transporter = nodemailer.createTransport({
@@ -15,79 +10,21 @@ const transporter = nodemailer.createTransport({
 });
 
 class EmailService {
-    // Send OTP via email
-    async sendOtp(email: string) {
+    // Send email
+    async sendEmail(mailOptions: {
+        to: string;
+        subject: string;
+        text: string;
+    }) {
         try {
-            // Find or create the user
-            let user = await UserModel.findOne({ where: { email } });
-            if (!user) {
-                user = await UserModel.create({
-                    email,
-                    authProvider: 'EMAIL',
-                    providerId: email,
-                    verified: false,
-                });
-            }
-
-            // Generate a 6-digit OTP
-            const otpCode = Math.floor(
-                100000 + Math.random() * 900000,
-            ).toString();
-
-            // Set expiry time to 10 minutes from now
-            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-            // Save the OTP in the database
-            const otp = await Otp.create({
-                userId: user.id,
-                code: otpCode,
-                expiresAt,
-                isUsed: false,
-            });
-
-            // Send the OTP via email
-            const mailOptions = {
+            const options = {
                 from: process.env.EMAIL_USER,
-                to: email,
-                subject: 'Your OTP Code',
-                text: `Your OTP is: ${otpCode}`,
+                ...mailOptions,
             };
-
-            await transporter.sendMail(mailOptions);
-            return { message: 'OTP sent successfully', otpId: otp.id };
-        } catch (error: any) {
-            throw new Error('Failed to send OTP via email');
-        }
-    }
-
-    // Verify OTP and login/register
-    async verifyOtp(email: string, otpCode: string) {
-        try {
-            // Find the user
-            const user = await UserModel.findOne({ where: { email } });
-            if (!user) throw new Error('User not found');
-
-            // Find the OTP
-            const otp = await Otp.findOne({
-                where: {
-                    userId: user.id,
-                    code: otpCode,
-                    isUsed: false,
-                    expiresAt: { [Op.gt]: new Date() },
-                },
-            });
-
-            if (!otp) throw new Error('Invalid or expired OTP');
-
-            // Mark the OTP as used
-            otp.isUsed = true;
-            await otp.save();
-
-            // Generate JWT token
-            const token = AuthService.generateToken(user);
-            return { user, token };
+            await transporter.sendMail(options);
+            return { message: 'Email sent successfully' };
         } catch (error) {
-            throw new Error('OTP verification failed');
+            throw new Error('Failed to send email');
         }
     }
 }

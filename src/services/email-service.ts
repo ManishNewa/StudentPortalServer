@@ -58,10 +58,11 @@ class EmailService {
      * @param otpCode - One-time password code
      */
     public sendOtpEmail(email: string, otpCode: string) {
+        const emailBody = otpEmailContent(otpCode);
         return this.sendEmail(
             email,
             'Your Student Portal account OTP',
-            otpEmailContent(otpCode),
+            emailBody,
         );
     }
 

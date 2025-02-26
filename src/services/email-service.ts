@@ -9,8 +9,16 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// Verify the transporter
+transporter.verify((error) => {
+    if (error) {
+        console.error('Transporter verification failed:', error);
+    } else {
+        console.log('Transporter is ready to send emails');
+    }
+});
+
 class EmailService {
-    // Send email
     async sendEmail(mailOptions: {
         to: string;
         subject: string;
@@ -23,8 +31,8 @@ class EmailService {
             };
             await transporter.sendMail(options);
             return { message: 'Email sent successfully' };
-        } catch (error) {
-            throw new Error('Failed to send email');
+        } catch (error: any) {
+            throw new Error(`Failed to send email::${error.message}`);
         }
     }
 }

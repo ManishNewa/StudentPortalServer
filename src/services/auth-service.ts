@@ -44,6 +44,20 @@ class AuthService {
         return user;
     }
 
+    async resendRegistrationVerification(email: string) {
+        const user = await User.findOne({ where: { email } });
+        if (user) {
+            // Generate a verification token
+            const verificationToken = generateVerificationToken();
+            // Send Verification Email
+            await EmailService.handleRegistrationVerification(
+                email,
+                verificationToken,
+            );
+        }
+        return true;
+    }
+
     // Login a user
     async login(email: string, password: string) {
         const user = await User.findOne({ where: { email } });

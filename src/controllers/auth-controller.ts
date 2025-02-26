@@ -24,6 +24,20 @@ class AuthController {
         }
     }
 
+    async resendUserVerification(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+
+            await AuthService.resendRegistrationVerification(email);
+
+            res.status(200).json({
+                message: 'User verification resent. Please check your email.',
+            });
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
     async login(req: Request, res: Response) {
         try {
             const { email, password } = req.body;

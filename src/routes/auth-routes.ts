@@ -6,6 +6,8 @@ const router = express.Router();
 
 // Register a new user
 router.post('/register', AuthController.register);
+// Resend user verification
+router.post('/resend-verification', AuthController.resendUserVerification);
 
 // Login a user
 router.post('/login', AuthController.login);
@@ -17,7 +19,7 @@ router.post('/google', AuthController.googleLogin);
 router.post('/facebook', AuthController.facebookLogin);
 
 // Send and verify OTP
-router.post('/sendOtp', AuthController.sendOtp);
-router.post('/verifyOtp', AuthController.verifyOtp);
+router.post('/send-otp', AuthController.sendOtp);
+router.post('/verify-otp', AuthController.verifyOtp);
 
 export default router;

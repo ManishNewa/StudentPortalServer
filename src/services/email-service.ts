@@ -8,6 +8,10 @@ import {
     otpEmailContent,
 } from '../templates/email-templates';
 
+interface TemplateReplacements {
+    [key: string]: string;
+}
+
 class EmailService {
     private emailTemplatePath: string;
     private emailTemplate: string;
@@ -77,6 +81,17 @@ class EmailService {
             subject,
             html: emailHtml,
         });
+    }
+
+    private replacePlaceholders(
+        template: string,
+        replacements: TemplateReplacements,
+    ): string {
+        return Object.entries(replacements).reduce(
+            (acc, [key, value]) =>
+                acc.replace(new RegExp(`{{${key}}}`, 'g'), value),
+            template,
+        );
     }
 }
 

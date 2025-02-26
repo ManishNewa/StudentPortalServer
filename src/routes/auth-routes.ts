@@ -16,4 +16,8 @@ router.get('/verify/:userId', AuthController.verify);
 router.post('/google', AuthController.googleLogin);
 router.post('/facebook', AuthController.facebookLogin);
 
+// Send and verify OTP
+router.post('/sendOtp', AuthController.sendOtp);
+router.post('/verifyOtp', AuthController.verifyOtp);
+
 export default router;

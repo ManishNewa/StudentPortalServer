@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import User from '../models/User';
 import GoogleService from './google-service';
 import FacebookService from './facebook-service';
 import OtpService from './otp-service';
 
-import User from '../models/User';
+import { generateVerificationToken } from '../utils';
 
 class AuthService {
     // Register a new user
@@ -20,6 +21,8 @@ class AuthService {
         const hashedPassword = password
             ? await bcrypt.hash(password, 10)
             : null;
+        // Generate a verification token
+        const verificationToken = generateVerificationToken();
         const user = await User.create({
             email,
             password: hashedPassword,
@@ -28,7 +31,7 @@ class AuthService {
             authProvider,
             providerId,
             verified: false, // Default to false
-            verificationToken: null, // Can be set later
+            verificationToken,
         });
         return user;
     }

@@ -4,7 +4,8 @@ import Otp from '../models/Otp';
 import UserModel from '../models/User';
 
 import AuthService from './auth-service';
-import EmailService from '../utils/email';
+import EmailService from './email-service';
+
 import { AuthProvider } from '../constants/enums';
 
 class OtpService {
@@ -38,11 +39,7 @@ class OtpService {
             });
 
             // Send the OTP via email
-            await EmailService.sendEmail({
-                to: email,
-                subject: 'Your OTP Code',
-                text: `Your OTP is: ${otpCode}`,
-            });
+            await EmailService.sendOtpEmail(email, otpCode);
 
             return { message: 'OTP sent successfully', otpId: otp.id };
         } catch (error) {

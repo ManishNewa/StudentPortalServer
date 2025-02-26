@@ -3,7 +3,10 @@ import * as path from 'path';
 
 import EmailConfig from '../config/email';
 
-import { registrationEmailContent } from '../templates/email-templates';
+import {
+    registrationEmailContent,
+    otpEmailContent,
+} from '../templates/email-templates';
 
 class EmailService {
     private emailTemplatePath: string = path.resolve(
@@ -35,6 +38,15 @@ class EmailService {
             email,
             'Confirm Your Student Portal Email Address',
             emailBody,
+        );
+    }
+
+    // handle OTP emails
+    public async sendOtpEmail(email: string, otpCode: string) {
+        return await this.sendEmail(
+            email,
+            'Your Student Portal account OTP',
+            otpEmailContent(otpCode),
         );
     }
 

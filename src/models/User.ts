@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 
 import sequelize from '../config/db';
-import { UserRole, AuthProvider } from '../constants/enums';
+import { UserRole, AuthProvider } from '../utils/constants';
 
 class User extends Model {
     public id!: number;

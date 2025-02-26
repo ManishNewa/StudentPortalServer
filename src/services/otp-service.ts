@@ -5,6 +5,7 @@ import UserModel from '../models/User';
 
 import AuthService from './auth-service';
 import EmailService from './email-service';
+import { AuthProvider } from '../constants/enums';
 
 class OtpService {
     // Generate and send OTP
@@ -15,8 +16,7 @@ class OtpService {
             if (!user) {
                 user = await UserModel.create({
                     email,
-                    authProvider: 'EMAIL',
-                    providerId: email,
+                    authProvider: AuthProvider.LOCAL,
                     verified: false,
                 });
             }

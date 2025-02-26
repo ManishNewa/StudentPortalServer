@@ -11,7 +11,7 @@ router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
 
 // Verify a user
-router.get('/verify/:userId', AuthController.verifyUser);
+router.post('/verify/:token', AuthController.verifyUser);
 
 router.post('/google', AuthController.googleLogin);
 router.post('/facebook', AuthController.facebookLogin);

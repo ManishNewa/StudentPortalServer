@@ -36,7 +36,7 @@ class AuthService {
         });
 
         // Send Verification Email
-        const verificationUrl = `${process.env.API_URL}/api/auth/verifyUser?token=${verificationToken}`;
+        const verificationUrl = `${process.env.API_URL}/api/auth/verify/${verificationToken}`;
 
         await EmailService.sendEmail({
             to: email,

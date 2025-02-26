@@ -13,6 +13,10 @@ export const ERROR_MESSAGES = {
     INVALID_CREDENTIALS: 'Invalid credentials',
     USER_EXISTS: 'User already exists',
     VERIFICATION_FAILED: 'Verification failed',
+    INVALID_TOKEN: 'Invalid verification token',
+    SOCIAL_AUTH_FAILED: 'Social authentication failed',
+    OTP_EXPIRED: 'OTP has expired',
+    OTP_MISMATCH: 'Invalid OTP code',
 };
 
 export const SUCCESS_MESSAGES = {
@@ -21,7 +25,7 @@ export const SUCCESS_MESSAGES = {
     LOGIN_SUCCESS: 'Login successful',
     USER_VERIFIED: 'User verified successfully',
     VERIFICATION_RESENT: 'Verification email resent successfully',
-    SOCIAL_LOGIN: 'login successful',
+    SOCIAL_LOGIN: (provider: string) => `${provider} login successful`,
     OTP_SENT: 'OTP sent successfully',
     OTP_VERIFIED: 'OTP verified successfully',
 };

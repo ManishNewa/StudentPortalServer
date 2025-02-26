@@ -22,7 +22,7 @@ class EmailService {
     async sendEmail(mailOptions: {
         to: string;
         subject: string;
-        text: string;
+        html: string;
     }) {
         try {
             const options = {

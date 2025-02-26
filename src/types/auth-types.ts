@@ -13,11 +13,11 @@ export interface LoginRequest {
 }
 
 export interface SocialLoginRequest {
-    idToken?: string;
-    accessToken?: string;
+    idToken: string;
+    accessToken: string;
 }
 
 export interface OtpRequest {
     email: string;
-    otp?: string;
+    otp: string;
 }

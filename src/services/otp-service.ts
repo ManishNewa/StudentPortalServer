@@ -6,7 +6,7 @@ import UserModel from '../models/User';
 import AuthService from './auth-service';
 import EmailService from './email-service';
 
-import { AuthProvider } from '../utils/constants';
+import { AuthProvider } from '../utils/enums';
 
 class OtpService {
     // Generate and send OTP

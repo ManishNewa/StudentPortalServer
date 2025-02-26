@@ -72,10 +72,9 @@ class EmailService {
 
     // handle replacing email body and sending email
     public async sendEmail(email: string, subject: string, emailBody: string) {
-        const emailHtml: string = this.emailTemplate.replace(
-            '{{emailBody}}',
+        const emailHtml: string = this.replacePlaceholders(this.emailTemplate, {
             emailBody,
-        );
+        });
         return await EmailConfig.sendEmail({
             to: email,
             subject,

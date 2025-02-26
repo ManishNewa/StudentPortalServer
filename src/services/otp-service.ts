@@ -4,7 +4,7 @@ import Otp from '../models/Otp';
 import UserModel from '../models/User';
 
 import AuthService from './auth-service';
-import EmailService from './email-service';
+import EmailService from '../utils/email';
 import { AuthProvider } from '../constants/enums';
 
 class OtpService {

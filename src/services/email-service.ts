@@ -10,6 +10,18 @@ class EmailService {
         __dirname,
         '../public/main-email-template.html',
     );
+    private emailTemplate: string;
+
+    constructor() {
+        try {
+            this.emailTemplate = fs.readFileSync(
+                this.emailTemplatePath,
+                'utf-8',
+            );
+        } catch (error) {
+            throw new Error(`Error loading file::${error}`);
+        }
+    }
 
     // handle sending email for verifying user
     public async handleRegistrationVerification(
@@ -17,22 +29,24 @@ class EmailService {
         verificationToken: string,
     ) {
         const verificationUrl = `${process.env.API_URL}/api/auth/verify/${verificationToken}`;
-        let emailTemplate: string;
-        try {
-            emailTemplate = fs.readFileSync(this.emailTemplatePath, 'utf-8');
-        } catch (error) {
-            throw new Error(`Error loading file::${error}`);
-        }
-        // Setup email body with email and verification url
         const emailBody: string = registrationEmailContent(verificationUrl);
-        const emailHtml: string = emailTemplate.replace(
+
+        return await this.sendEmail(
+            email,
+            'Confirm Your Student Portal Email Address',
+            emailBody,
+        );
+    }
+
+    // handle replacing email body and sending email
+    public async sendEmail(email: string, subject: string, emailBody: string) {
+        const emailHtml: string = this.emailTemplate.replace(
             '{{emailBody}}',
             emailBody,
         );
-
-        await EmailConfig.sendEmail({
+        return await EmailConfig.sendEmail({
             to: email,
-            subject: 'Confirm Your Student Portal Email Address',
+            subject,
             html: emailHtml,
         });
     }

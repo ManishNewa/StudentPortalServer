@@ -26,3 +26,14 @@ export const registrationEmailContent = (verificationUrl: String) =>
         If you did not create an account with us, please ignore this
         email.
     </p>`;
+
+export const otpEmailContent = (otpCode: string) =>
+    `<h2
+        style="font-size: 20px; margin-bottom: 15px; color: #6245b1"
+    >
+        Hey there
+    </h2>
+    <p>Your one-time password (OTP) is:</p>
+    <p class="otp" style="font-size: 24px; font-weight: bold; color: #333; margin: 10px 0;">${otpCode}</p>
+    <p>This OTP is valid for <strong>10 minutes</strong> and can only be used once.</p>
+    <p><strong>Do not share this OTP with anyone.</strong> If you did not request this, please ignore this email.</p>`;

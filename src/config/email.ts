@@ -18,7 +18,7 @@ transporter.verify((error) => {
     }
 });
 
-class EmailService {
+class EmailConfig {
     async sendEmail(mailOptions: {
         to: string;
         subject: string;
@@ -37,4 +37,4 @@ class EmailService {
     }
 }
 
-export default new EmailService();
+export default new EmailConfig();

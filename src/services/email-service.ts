@@ -9,13 +9,16 @@ import {
 } from '../templates/email-templates';
 
 class EmailService {
-    private emailTemplatePath: string = path.resolve(
-        __dirname,
-        process.env.EMAIL_TEMPLATE_PATH || '../public/main-email-template.html',
-    );
+    private emailTemplatePath: string;
     private emailTemplate: string;
 
     constructor() {
+        this.emailTemplatePath = path.resolve(
+            __dirname,
+            process.env.EMAIL_TEMPLATE_PATH ||
+                '../public/main-email-template.html',
+        );
+
         try {
             this.emailTemplate = fs.readFileSync(
                 this.emailTemplatePath,

@@ -11,7 +11,7 @@ import {
 class EmailService {
     private emailTemplatePath: string = path.resolve(
         __dirname,
-        '../public/main-email-template.html',
+        process.env.EMAIL_TEMPLATE_PATH || '../public/main-email-template.html',
     );
     private emailTemplate: string;
 
@@ -22,19 +22,23 @@ class EmailService {
                 'utf-8',
             );
         } catch (error) {
-            throw new Error(`Error loading file::${error}`);
+            throw new Error(
+                `Failed to load email template at ${this.emailTemplatePath}: ${
+                    error instanceof Error ? error.message : error
+                }`,
+            );
         }
     }
 
     // handle sending email for verifying user
-    public async handleRegistrationVerification(
+    public handleRegistrationVerification(
         email: string,
         verificationToken: string,
     ) {
         const verificationUrl = `${process.env.API_URL}/api/auth/verify/${verificationToken}`;
         const emailBody: string = registrationEmailContent(verificationUrl);
 
-        return await this.sendEmail(
+        return this.sendEmail(
             email,
             'Confirm Your Student Portal Email Address',
             emailBody,
@@ -42,8 +46,8 @@ class EmailService {
     }
 
     // handle OTP emails
-    public async sendOtpEmail(email: string, otpCode: string) {
-        return await this.sendEmail(
+    public sendOtpEmail(email: string, otpCode: string) {
+        return this.sendEmail(
             email,
             'Your Student Portal account OTP',
             otpEmailContent(otpCode),

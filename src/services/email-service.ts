@@ -33,7 +33,11 @@ class EmailService {
         }
     }
 
-    // handle sending email for verifying user
+    /**
+     * Send email verification link to newly registered users
+     * @param email - User's email address
+     * @param verificationToken - Verification token from database
+     */
     public handleRegistrationVerification(
         email: string,
         verificationToken: string,
@@ -48,7 +52,11 @@ class EmailService {
         );
     }
 
-    // handle OTP emails
+    /**
+     * Send OTP code to user's email
+     * @param email - User's email address
+     * @param otpCode - One-time password code
+     */
     public sendOtpEmail(email: string, otpCode: string) {
         return this.sendEmail(
             email,

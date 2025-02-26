@@ -36,8 +36,8 @@ class AuthController {
 
     async verifyUser(req: Request, res: Response) {
         try {
-            const { userId } = req.params;
-            const user = await AuthService.verifyUser(Number(userId));
+            const { token } = req.params;
+            const user = await AuthService.verifyUser(token as string);
             if (user) {
                 res.json({ message: 'User verified successfully', user });
             } else {

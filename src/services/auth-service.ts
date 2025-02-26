@@ -93,12 +93,20 @@ class AuthService {
     }
 
     // Verify user (mark as verified)
-    async verifyUser(userId: number) {
-        const user = await User.findByPk(userId);
-        if (user) {
-            user.verified = true;
-            await user.save();
+    async verifyUser(token: string) {
+        const user = await User.findOne({
+            where: { verificationToken: token },
+        });
+
+        if (!user) {
+            throw new Error('Invalid or expired verification token');
         }
+
+        // Mark the user as verified and clear the verification token
+        user.verified = true;
+        user.verificationToken = '';
+        await user.save();
+
         return user;
     }
 }

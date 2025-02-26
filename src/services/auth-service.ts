@@ -5,6 +5,7 @@ import User from '../models/User';
 import GoogleService from './google-service';
 import FacebookService from './facebook-service';
 import OtpService from './otp-service';
+import EmailService from '../utils/email';
 
 import { generateVerificationToken } from '../utils';
 
@@ -33,6 +34,16 @@ class AuthService {
             verified: false, // Default to false
             verificationToken,
         });
+
+        // Send Verification Email
+        const verificationUrl = `${process.env.API_URL}/api/auth/verifyUser?token=${verificationToken}`;
+
+        await EmailService.sendEmail({
+            to: email,
+            subject: 'Verify your Email',
+            text: `Click the link to verify your email: ${verificationUrl}`,
+        });
+
         return user;
     }
 

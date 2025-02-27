@@ -2,8 +2,9 @@ import path from 'path';
 import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
 import { Request, Response, NextFunction } from 'express';
+import { TranslationKey } from './types';
 
-const localesPath = path.join(__dirname, '../../locales');
+const localesPath = path.resolve(__dirname, '../locales');
 
 i18next
     .use(Backend)
@@ -38,5 +39,14 @@ export const i18nMiddleware = (
     req.t = i18next.getFixedT(lng.toString());
     next();
 };
+
+declare module 'i18next' {
+    interface TFunction {
+        <TResult extends string = string>(
+            key: TranslationKey,
+            options?: Record<string, unknown>,
+        ): TResult;
+    }
+}
 
 export default i18next;

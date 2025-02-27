@@ -1,76 +1,129 @@
 import fs from 'fs';
 import path from 'path';
+import {
+    translateText,
+    getSupportedLanguages,
+    getLanguageName,
+} from './translator';
+import { Language } from '../utils/interfaces';
 
 const LOCALES_DIR = path.join(__dirname, '../locales');
 const SOURCE_LANG = 'en';
 
-const syncTranslations = () => {
-    const sourcePath = path.join(LOCALES_DIR, SOURCE_LANG);
+// Rate limiter to avoid overwhelming the LibreTranslate server
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function syncAndTranslate() {
+    const languages = await getSupportedLanguages();
     const targetLangs = fs
         .readdirSync(LOCALES_DIR)
         .filter(
             (lang) =>
                 lang !== SOURCE_LANG &&
                 fs.statSync(path.join(LOCALES_DIR, lang)).isDirectory(),
+        )
+        .filter((lang) => languages.some((l) => l.code === lang));
+
+    console.log(`🌐 Supported target languages: ${targetLangs.join(', ')}`);
+
+    for (const lang of targetLangs) {
+        console.log(
+            `\n🔁 Processing ${getLanguageName(lang, languages)} (${lang})...`,
         );
+        await processLanguage(lang, languages);
+    }
 
-    const syncNamespace = (ns: string) => {
-        const sourceFile = path.join(sourcePath, `${ns}.json`);
-        const sourceContent = JSON.parse(fs.readFileSync(sourceFile, 'utf-8'));
-
-        targetLangs.forEach((lang) => {
-            const targetPath = path.join(LOCALES_DIR, lang, `${ns}.json`);
-            let targetContent: any = {};
-
-            if (fs.existsSync(targetPath)) {
-                targetContent = JSON.parse(
-                    fs.readFileSync(targetPath, 'utf-8'),
-                );
-            }
-
-            const syncKeys = (
-                source: any,
-                target: any,
-                path: string[] = [],
-            ): any => {
-                Object.keys(source).forEach((key) => {
-                    const currentPath = [...path, key];
-                    if (typeof source[key] === 'object') {
-                        target[key] = target[key] || {};
-                        syncKeys(source[key], target[key], currentPath);
-                    } else if (!(key in target)) {
-                        target[key] = `TRANSLATE_${currentPath.join('.')}`;
-                        console.log(
-                            `Added ${lang}/${ns}.${currentPath.join('.')}`,
-                        );
-                    }
-                });
-                return target;
-            };
-
-            const updated = syncKeys(sourceContent, targetContent);
-            fs.writeFileSync(targetPath, JSON.stringify(updated, null, 2));
-        });
-    };
-
-    fs.readdirSync(sourcePath)
-        .filter((file) => file.endsWith('.json'))
-        .map((file) => file.replace('.json', ''))
-        .forEach(syncNamespace);
-};
-
-syncTranslations();
-console.log('🚀 Synced translations');
-
-function createMissingKeys(source: any, target: any, path: string[] = []) {
-    Object.keys(source).forEach((key) => {
-        const currentPath = [...path, key];
-        if (typeof source[key] === 'object') {
-            target[key] = target[key] || {};
-            createMissingKeys(source[key], target[key], currentPath);
-        } else if (!(key in target)) {
-            target[key] = `TRANSLATE_${currentPath.join('.')}`;
-            console.log(`Added missing key: ${currentPath.join('.')}`);
-        }
-    });
+    console.log('\n✅ Translation sync completed!');
 }
+
+async function processLanguage(targetLang: string, languages: Language[]) {
+    const sourcePath = path.join(LOCALES_DIR, SOURCE_LANG);
+    const namespaces = fs
+        .readdirSync(sourcePath)
+        .filter((file) => file.endsWith('.json'))
+        .map((file) => file.replace('.json', ''));
+
+    for (const ns of namespaces) {
+        await processNamespace(targetLang, ns, languages);
+        await delay(500); // Rate limiting
+    }
+}
+
+async function processNamespace(
+    targetLang: string,
+    namespace: string,
+    languages: Language[],
+) {
+    const sourceFile = path.join(LOCALES_DIR, SOURCE_LANG, `${namespace}.json`);
+    const targetFile = path.join(LOCALES_DIR, targetLang, `${namespace}.json`);
+
+    const sourceContent = JSON.parse(fs.readFileSync(sourceFile, 'utf-8'));
+    let targetContent: any = fs.existsSync(targetFile)
+        ? JSON.parse(fs.readFileSync(targetFile, 'utf-8'))
+        : {};
+
+    const { translatedCount, totalCount } = await syncAndTranslateObject(
+        sourceContent,
+        targetContent,
+        targetLang,
+        languages,
+        [namespace],
+    );
+
+    fs.writeFileSync(targetFile, JSON.stringify(targetContent, null, 2));
+    console.log(
+        `  ➤ ${namespace}.json: ${translatedCount}/${totalCount} translations updated`,
+    );
+}
+
+async function syncAndTranslateObject(
+    source: any,
+    target: any,
+    targetLang: string,
+    languages: Language[],
+    path: string[] = [],
+): Promise<{ translatedCount: number; totalCount: number }> {
+    let translatedCount = 0;
+    let totalCount = 0;
+
+    for (const [key, value] of Object.entries(source)) {
+        totalCount++;
+        const currentPath = [...path, key];
+
+        if (typeof value === 'object') {
+            target[key] = target[key] || {};
+            const result = await syncAndTranslateObject(
+                value,
+                target[key],
+                targetLang,
+                languages,
+                currentPath,
+            );
+            translatedCount += result.translatedCount;
+            continue;
+        }
+
+        if (!(key in target) || target[key].startsWith('TRANSLATE_')) {
+            try {
+                const translation = await translateText(
+                    String(value),
+                    targetLang,
+                    SOURCE_LANG,
+                );
+                target[key] = translation;
+                translatedCount++;
+            } catch (error) {
+                console.error(
+                    `Failed to translate ${currentPath.join('.')}:`,
+                    error,
+                );
+                target[key] = `TRANSLATION_FAILED: ${value}`;
+            }
+            await delay(250); // Rate limiting between requests
+        }
+    }
+
+    return { translatedCount, totalCount };
+}
+
+syncAndTranslate().catch(console.error);

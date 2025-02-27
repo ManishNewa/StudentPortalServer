@@ -12,8 +12,10 @@
         "experimentalDecorators": true,
         "strictPropertyInitialization": false,
         "emitDecoratorMetadata": true,
-        "moduleResolution": "node",
-        "typeRoots": ["./node_modules/@types", "./src/i18n"]
+        "typeRoots": ["./node_modules/@types", "./src/i18n"],
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node"
     },
     "include": ["src/**/*", "server.ts"],
     "exclude": ["node_modules"]

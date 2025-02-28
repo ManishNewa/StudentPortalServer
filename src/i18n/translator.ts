@@ -41,13 +41,13 @@ export async function translateText(
                 },
             },
         );
-        return response.data.translatedText;
         // Commented out for now
         // const allTranslatedTexts = [
         //     ...response.data.translatedText,
         //     ...response.data.alternatives,
         // ];
         // return getBestTranslation(allTranslatedTexts);
+        return response.data.translatedText;
     } catch (error) {
         console.error(
             `Translation failed for "${text}" to ${targetLang}:`,

@@ -1,0 +1,94 @@
+{
+    "auth": {
+        "user": {
+            "exists": "User already exists",
+            "invalid-credentials": "Invalid credentials",
+            "account": {
+                "locked": "Account is locked",
+                "suspended": "Account is suspended"
+            },
+            "password": {
+                "required": "Password is required",
+                "mismatch": "Passwords do not match"
+            },
+            "email": {
+                "required": "Email is required",
+                "invalid": "Invalid email format",
+                "not-found": "Email not found"
+            },
+            "user-not-found": "User not found",
+            "unauthorized": "Unauthorized access"
+        },
+        "registration": {
+            "success": "User registered successfully. Please check your email to verify your account",
+            "verification-resent": "Verification email resent successfully"
+        },
+        "login": {
+            "success": "Login successful",
+            "social": {
+                "login": "{{provider}} login successful"
+            }
+        },
+        "otp": {
+            "sent": "OTP sent successfully",
+            "verified": "OTP verified successfully"
+        }
+    },
+    "verification": {
+        "general": {
+            "failed": "Verification failed",
+            "invalid-token": "Invalid verification token",
+            "otp": {
+                "expired": "OTP has expired",
+                "mismatch": "Invalid OTP code",
+                "required": "OTP is required"
+            },
+            "token-required": "Verification token is required"
+        }
+    },
+    "authentication": {
+        "social": {
+            "auth-failed": "Social authentication failed"
+        },
+        "session": {
+            "expired": "Session expired",
+            "invalid": "Invalid session"
+        },
+        "login": {
+            "invalid": "Invalid login attempt"
+        }
+    },
+    "fields": {
+        "missing": "Missing required fields",
+        "general": {
+            "required": "Field is required",
+            "invalid": "Invalid field input",
+            "not-found": "Field not found"
+        }
+    },
+    "general": {
+        "default": "Something went wrong",
+        "service": {
+            "unavailable": "Service unavailable",
+            "timeout": "Request timeout"
+        },
+        "error": {
+            "internal-server": "Internal server error",
+            "not-implemented": "Not implemented"
+        },
+        "authorization": {
+            "unauthorized": "Unauthorized",
+            "forbidden": "Forbidden"
+        }
+    },
+    "network": {
+        "connection": {
+            "no-internet": "No internet connection",
+            "request-failed": "Request failed",
+            "connection-lost": "Connection lost"
+        },
+        "server": {
+            "error": "Server error"
+        }
+    }
+}

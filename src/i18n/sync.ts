@@ -5,7 +5,7 @@ import {
     getSupportedLanguages,
     getLanguageName,
 } from './translator';
-import { Language } from '../utils/interfaces';
+import { I18nLanguage } from '../interfaces/i18n-interface';
 
 const LOCALES_DIR = path.join(__dirname, '../locales');
 const SOURCE_LANG = 'en';
@@ -36,7 +36,7 @@ async function syncAndTranslate() {
     console.log('\n✅ Translation sync completed!');
 }
 
-async function processLanguage(targetLang: string, languages: Language[]) {
+async function processLanguage(targetLang: string, languages: I18nLanguage[]) {
     const sourcePath = path.join(LOCALES_DIR, SOURCE_LANG);
     const namespaces = fs
         .readdirSync(sourcePath)
@@ -52,7 +52,7 @@ async function processLanguage(targetLang: string, languages: Language[]) {
 async function processNamespace(
     targetLang: string,
     namespace: string,
-    languages: Language[],
+    languages: I18nLanguage[]
 ) {
     const sourceFile = path.join(LOCALES_DIR, SOURCE_LANG, `${namespace}.json`);
     const targetFile = path.join(LOCALES_DIR, targetLang, `${namespace}.json`);
@@ -80,7 +80,7 @@ async function syncAndTranslateObject(
     source: any,
     target: any,
     targetLang: string,
-    languages: Language[],
+    languages: I18nLanguage[],
     path: string[] = [],
 ): Promise<{ translatedCount: number; totalCount: number }> {
     let translatedCount = 0;

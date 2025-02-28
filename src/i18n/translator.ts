@@ -29,7 +29,7 @@ export async function translateText(
         formData.append('q', text);
         formData.append('source', sourceLang);
         formData.append('target', targetLang);
-        formData.append('alternatives', '3');
+        // formData.append('alternatives', '3');
         if (API_KEY) formData.append('api_key', API_KEY);
 
         const response = await axios.post(
@@ -41,11 +41,13 @@ export async function translateText(
                 },
             },
         );
-        const allTranslatedTexts = [
-            ...response.data.translatedText,
-            ...response.data.alternatives,
-        ];
-        return getBestTranslation(allTranslatedTexts);
+        return response.data.translatedText;
+        // Commented out for now
+        // const allTranslatedTexts = [
+        //     ...response.data.translatedText,
+        //     ...response.data.alternatives,
+        // ];
+        // return getBestTranslation(allTranslatedTexts);
     } catch (error) {
         console.error(
             `Translation failed for "${text}" to ${targetLang}:`,

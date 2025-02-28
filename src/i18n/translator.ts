@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-import I18nLanguage from '../interfaces/i18n-language';
-import TranslationResponse from '../interfaces/translation-response';
+import {
+    I18nLanguage,
+    TranslationResponse,
+} from '../interfaces/i18n-interface';
 
 const LIBRETRANSLATE_URL =
     process.env.LIBRETRANSLATE_URL || 'http://localhost:5000';

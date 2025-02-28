@@ -5,7 +5,7 @@ import {
     getSupportedLanguages,
     getLanguageName,
 } from './translator';
-import I18nLanguage from '../interfaces/i18n-language';
+import { I18nLanguage } from '../interfaces/i18n-interface';
 
 const LOCALES_DIR = path.join(__dirname, '../locales');
 const SOURCE_LANG = 'en';

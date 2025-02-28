@@ -9,7 +9,8 @@
     "start": "node dist/server.js",
     "migrate": "dotenv -e .env npx sequelize-cli db:migrate",
     "migrate:undo": "dotenv -e .env npx sequelize-cli db:migrate:undo",
-    "migrate:reset": "dotenv -e .env npx sequelize-cli db:migrate:undo:all && dotenv -e .env npx sequelize-cli db:migrate"
+    "migrate:reset": "dotenv -e .env npx sequelize-cli db:migrate:undo:all && dotenv -e .env npx sequelize-cli db:migrate",
+    "sync:lang": "ts-node src/i18n/sync.ts"
   },
   "keywords": [
     "Student Portal"

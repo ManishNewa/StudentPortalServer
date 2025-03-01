@@ -23,6 +23,7 @@ export const SUCCESS_MESSAGES = {
     REGISTER_SUCCESS:
         'User registered successfully. Please check your email to verify your account',
     LOGIN_SUCCESS: 'Login successful',
+    LOGOUT_SUCCESS: 'Logged out successfully',
     USER_VERIFIED: 'User verified successfully',
     VERIFICATION_RESENT: 'Verification email resent successfully',
     SOCIAL_LOGIN: (provider: string) => `${provider} login successful`,

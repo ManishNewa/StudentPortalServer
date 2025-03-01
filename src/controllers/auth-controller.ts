@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import '../types/session-types';
 
 import AuthService from '../services/auth-service';
 
@@ -59,6 +60,9 @@ class AuthController {
             const { email, password } = req.body;
             const { user, token } = await AuthService.login(email, password);
 
+            req.session.user = user;
+            req.session.token = token;
+
             handleResponse(
                 res,
                 HTTP_STATUS.OK,
@@ -68,6 +72,24 @@ class AuthController {
                     token,
                 },
             );
+        } catch (error: any) {
+            handleError(res, error);
+        }
+    }
+
+    async logout(req: Request, res: Response) {
+        try {
+            req.session.destroy((err) => {
+                if (err) {
+                    handleError(res, err);
+                }
+                res.clearCookie('connect.sid');
+                handleResponse(
+                    res,
+                    HTTP_STATUS.OK,
+                    SUCCESS_MESSAGES.LOGOUT_SUCCESS,
+                );
+            });
         } catch (error: any) {
             handleError(res, error);
         }

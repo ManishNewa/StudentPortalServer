@@ -18,6 +18,7 @@ app.post('/register', AuthController.register);
 app.post('/resend-verification', AuthController.resendUserVerification);
 app.post('/login', AuthController.login);
 app.post('/verify/:token', AuthController.verifyUser);
+app.post('/google', AuthController.googleLogin);
 
 describe('AuthController', () => {
     beforeEach(() => {
@@ -156,7 +157,6 @@ describe('AuthController', () => {
             };
             (AuthService.verifyUser as jest.Mock).mockResolvedValue(mockUser);
 
-            console.log('Verify tokennn::');
             const response = await request(app).post(
                 '/verify/this_is_randomly_generated_token',
             );
@@ -169,6 +169,44 @@ describe('AuthController', () => {
             const response = await request(app).post('/verify/'); // Missing token
 
             expect(response.status).toBe(HTTP_STATUS.NOT_FOUND);
+        });
+    });
+
+    describe('POST /google-login', () => {
+        it('should login/register with Google and return 200 status', async () => {
+            const mockUser = {
+                id: 1,
+                email: 'test@gmail.com',
+                password: 'testing123',
+                phone: null,
+                role: UserRole.GUEST,
+                authProvider: AuthProvider.LOCAL,
+                providerId: null,
+                verified: true,
+                verificationToken: null,
+            };
+            const mockToken = 'mock-token';
+            (AuthService.googleLogin as jest.Mock).mockResolvedValue({
+                user: mockUser,
+                token: mockToken,
+            });
+
+            const response = await request(app)
+                .post('/google')
+                .send({ idToken: 'mock-id-token' });
+
+            expect(response.status).toBe(HTTP_STATUS.OK);
+            expect(response.body.message).toBe(
+                SUCCESS_MESSAGES.SOCIAL_LOGIN('Google'),
+            );
+            expect(response.body.data.user).toEqual(mockUser);
+            expect(response.body.data.token).toBe(mockToken);
+        });
+
+        it('should return 400 if idToken is missing', async () => {
+            const response = await request(app).post('/google').send({});
+
+            expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
         });
     });
 });

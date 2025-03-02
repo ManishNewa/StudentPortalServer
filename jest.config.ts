@@ -5,5 +5,5 @@ export default {
         '^.+\\.ts$': 'ts-jest',
     },
     moduleFileExtensions: ['ts', 'js'],
-    setupFilesAfterEnv: ['jest.setup.ts'],
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };

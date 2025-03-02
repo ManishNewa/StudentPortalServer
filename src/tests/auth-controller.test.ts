@@ -19,6 +19,8 @@ app.post('/resend-verification', AuthController.resendUserVerification);
 app.post('/login', AuthController.login);
 app.post('/verify/:token', AuthController.verifyUser);
 app.post('/google', AuthController.googleLogin);
+app.post('/send-otp', AuthController.sendOtp);
+app.post('/verify-otp', AuthController.verifyOtp);
 
 describe('AuthController', () => {
     beforeEach(() => {
@@ -173,6 +175,54 @@ describe('AuthController', () => {
 
         it('should return 400 if idToken is missing', async () => {
             const response = await request(app).post('/google').send({});
+
+            expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
+        });
+    });
+
+    describe('POST /send-otp', () => {
+        it('should send OTP and return 200 status', async () => {
+            const mockOtp = '123456';
+            (AuthService.sendOtp as jest.Mock).mockResolvedValue(mockOtp);
+
+            const response = await request(app)
+                .post('/send-otp')
+                .send({ email: 'test@example.com' });
+
+            expect(response.status).toBe(HTTP_STATUS.OK);
+            expect(response.body.message).toBe(SUCCESS_MESSAGES.OTP_SENT);
+            expect(response.body.data.otp).toBe(mockOtp);
+        });
+
+        it('should return 400 if email is missing', async () => {
+            const response = await request(app).post('/send-otp').send({});
+
+            expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
+        });
+    });
+    describe('POST /verify-otp', () => {
+        it('should verify OTP and return 200 status', async () => {
+            const mockUser = { id: 1, email: 'test@example.com' };
+            const mockToken = 'mock-token';
+            (AuthService.verifyOtp as jest.Mock).mockResolvedValue({
+                user: mockUser,
+                token: mockToken,
+            });
+
+            const response = await request(app)
+                .post('/verify-otp')
+                .send({ email: 'test@example.com', otp: '123456' });
+
+            expect(response.status).toBe(HTTP_STATUS.OK);
+            expect(response.body.message).toBe(SUCCESS_MESSAGES.OTP_VERIFIED);
+            expect(response.body.data.user).toEqual(mockUser);
+            expect(response.body.data.token).toBe(mockToken);
+        });
+
+        it('should return 400 if email or OTP is missing', async () => {
+            const response = await request(app)
+                .post('/verify-otp')
+                .send({ email: 'test@example.com' }); // Missing OTP
 
             expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
         });

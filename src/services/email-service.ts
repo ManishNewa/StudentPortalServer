@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import EmailConfig from '../config/email';
+import EmailConfig from '@/config/email';
 
 import {
     registrationEmailContent,
     otpEmailContent,
-} from '../templates/email-templates';
+} from '@/templates/email-templates';
 
 interface TemplateReplacements {
     [key: string]: string;

@@ -1,12 +1,12 @@
 import { Op } from 'sequelize';
 
-import Otp from '../models/Otp';
-import UserModel from '../models/User';
+import Otp from '@/models/Otp';
+import UserModel from '@/models/User';
 
-import AuthService from './auth-service';
-import EmailService from './email-service';
+import AuthService from '@/services/auth-service';
+import EmailService from '@/services/email-service';
 
-import { AuthProvider } from '../utils/enums';
+import { AuthProvider } from '@/utils/enums';
 
 class OtpService {
     // Generate and send OTP

@@ -1,5 +1,5 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import { UserRole, AuthProvider } from '../utils/enums';
+import { UserRole, AuthProvider } from '@/utils/enums';
 
 module.exports = {
     up: async (queryInterface: QueryInterface, Sequelize: typeof DataTypes) => {

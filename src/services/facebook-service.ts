@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import UserModel from '../models/User';
-import AuthService from './auth-service';
+import UserModel from '@/models/User';
+import AuthService from '@/services/auth-service';
 
 class FacebookService {
     // Verify Facebook access token and retrieve user data

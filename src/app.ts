@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 
-import authRoutes from './routes/auth-routes';
-import sequelize from './config/db';
-import { sessionConfig } from './config/session';
+import authRoutes from '@/routes/auth-routes';
+import sequelize from '@/config/db';
+import { sessionConfig } from '@/config/session';
 
 const app = express();
 

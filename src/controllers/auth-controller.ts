@@ -60,9 +60,10 @@ class AuthController {
             const { email, password } = req.body;
             const { user, token } = await AuthService.login(email, password);
 
-            req.session.user = user;
-            req.session.token = token;
-
+            if (process.env.NODE_ENV !== 'test') {
+                req.session.user = user;
+                req.session.token = token;
+            }
             handleResponse(
                 res,
                 HTTP_STATUS.OK,

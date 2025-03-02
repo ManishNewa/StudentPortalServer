@@ -17,6 +17,7 @@ app.use(express.json());
 app.post('/register', AuthController.register);
 app.post('/resend-verification', AuthController.resendUserVerification);
 app.post('/login', AuthController.login);
+app.post('/verify/:token', AuthController.verifyUser);
 
 describe('AuthController', () => {
     beforeEach(() => {
@@ -138,6 +139,36 @@ describe('AuthController', () => {
                 .send({ email: 'test@gmail.com' }); // Missing password
 
             expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
+        });
+    });
+    describe('POST /verify/:token', () => {
+        it('should verify a user and return 200 status', async () => {
+            const mockUser = {
+                id: 1,
+                email: 'test@gmail.com',
+                password: 'testing123',
+                phone: null,
+                role: UserRole.GUEST,
+                authProvider: AuthProvider.LOCAL,
+                providerId: null,
+                verified: true,
+                verificationToken: null,
+            };
+            (AuthService.verifyUser as jest.Mock).mockResolvedValue(mockUser);
+
+            console.log('Verify tokennn::');
+            const response = await request(app).post(
+                '/verify/this_is_randomly_generated_token',
+            );
+            expect(response.status).toBe(HTTP_STATUS.OK);
+            expect(response.body.message).toBe(SUCCESS_MESSAGES.USER_VERIFIED);
+            expect(response.body.data.user).toEqual(mockUser);
+        });
+
+        it('should return 404 if token is missing', async () => {
+            const response = await request(app).post('/verify/'); // Missing token
+
+            expect(response.status).toBe(HTTP_STATUS.NOT_FOUND);
         });
     });
 });

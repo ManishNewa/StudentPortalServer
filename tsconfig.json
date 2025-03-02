@@ -20,7 +20,7 @@
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
         "typeRoots": ["./node_modules/@types", "./src/types"],
-        "types": ["jest"]
+        "types": ["node", "jest"]
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules"]

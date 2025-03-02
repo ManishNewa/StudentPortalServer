@@ -47,8 +47,15 @@ describe('AuthController', () => {
             expect(response.body.message).toBe(
                 SUCCESS_MESSAGES.REGISTER_SUCCESS,
             );
-            expect(sendEmailMock).toHaveBeenCalledTimes(0); // Ensure sendEmail was called
-            // expect(response.body.data.user).toEqual(mockUser);
+            expect(sendEmailMock).toHaveBeenCalledTimes(0);
+        });
+
+        it('should return 400 if required fields are missing', async () => {
+            const response = await request(app)
+                .post('/register')
+                .send({ email: 'test@example.com' });
+
+            expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
         });
     });
 });

@@ -152,13 +152,6 @@ describe('AuthController', () => {
             const mockUser = {
                 id: 1,
                 email: 'test@gmail.com',
-                password: 'testing123',
-                phone: null,
-                role: UserRole.GUEST,
-                authProvider: AuthProvider.LOCAL,
-                providerId: null,
-                verified: true,
-                verificationToken: null,
             };
             const mockToken = 'mock-token';
             (AuthService.googleLogin as jest.Mock).mockResolvedValue({

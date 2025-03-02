@@ -15,8 +15,9 @@
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
-        "typeRoots": ["./node_modules/@types", "./src/types"]
+        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "types": ["jest"]
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "jest.setup.ts"],
     "exclude": ["node_modules"]
 }

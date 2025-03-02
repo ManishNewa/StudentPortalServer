@@ -24,7 +24,9 @@ export const handleError = (
     res: Response,
     error: any,
 ): Response<ErrorResponse> => {
-    console.error('Request Error:', error);
+    if (process.env.NODE_ENV !== 'test') {
+        console.error('Request Error:', error);
+    }
     const status = error.statusCode || HTTP_STATUS.BAD_REQUEST;
     const message = error.message || ERROR_MESSAGES.DEFAULT;
     return res.status(status).json({ error: message });

@@ -10,13 +10,15 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verify the transporter
-transporter.verify((error) => {
-    if (error) {
-        console.error('Transporter verification failed:', error);
-    } else {
-        console.log('Transporter is ready to send emails');
-    }
-});
+if (process.env.NODE_ENV !== 'test') {
+    transporter.verify((error) => {
+        if (error) {
+            console.error('Transporter verification failed:', error);
+        } else {
+            console.log('Transporter is ready to send emails');
+        }
+    });
+}
 
 class EmailConfig {
     async sendEmail(mailOptions: {

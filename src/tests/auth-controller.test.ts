@@ -42,10 +42,6 @@ describe('AuthController', () => {
             const response = await request(app).post('/register').send({
                 email: 'test@example.com',
                 password: 'test-example',
-                phone: null,
-                role: UserRole.GUEST,
-                authProvider: AuthProvider.LOCAL,
-                providerId: null,
             });
             expect(response.status).toBe(HTTP_STATUS.CREATED);
             expect(response.body.message).toBe(
@@ -93,13 +89,6 @@ describe('AuthController', () => {
             const mockUser = {
                 id: 24,
                 email: 'test@gmail.com',
-                password: 'testing123',
-                phone: null,
-                role: UserRole.GUEST,
-                authProvider: AuthProvider.LOCAL,
-                providerId: null,
-                verified: false,
-                verificationToken: 'testtoken',
             };
 
             // Mock token
@@ -121,13 +110,6 @@ describe('AuthController', () => {
                 expect.objectContaining({
                     id: mockUser.id,
                     email: mockUser.email,
-                    password: mockUser.password,
-                    phone: mockUser.phone,
-                    role: mockUser.role,
-                    authProvider: mockUser.authProvider,
-                    providerId: mockUser.providerId,
-                    verified: mockUser.verified,
-                    verificationToken: mockUser.verificationToken,
                     //createdAt and updatedAt could be dynamic so its ignored here
                 }),
             );
@@ -147,13 +129,6 @@ describe('AuthController', () => {
             const mockUser = {
                 id: 1,
                 email: 'test@gmail.com',
-                password: 'testing123',
-                phone: null,
-                role: UserRole.GUEST,
-                authProvider: AuthProvider.LOCAL,
-                providerId: null,
-                verified: true,
-                verificationToken: null,
             };
             (AuthService.verifyUser as jest.Mock).mockResolvedValue(mockUser);
 

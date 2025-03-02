@@ -16,6 +16,7 @@ app.use(express.json());
 // Bind the AuthController methods to routes
 app.post('/register', AuthController.register);
 app.post('/resend-verification', AuthController.resendUserVerification);
+app.post('/login', AuthController.login);
 
 describe('AuthController', () => {
     beforeEach(() => {
@@ -79,6 +80,62 @@ describe('AuthController', () => {
             const response = await request(app)
                 .post('/resend-verification')
                 .send({});
+
+            expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
+        });
+    });
+
+    describe('POST /login', () => {
+        it('should login a user and return 200 status', async () => {
+            // Mock user data
+            const mockUser = {
+                id: 24,
+                email: 'test@gmail.com',
+                password: 'testing123',
+                phone: null,
+                role: UserRole.GUEST,
+                authProvider: AuthProvider.LOCAL,
+                providerId: null,
+                verified: false,
+                verificationToken: 'testtoken',
+            };
+
+            // Mock token
+            const mockToken =
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQsImVtYWlsIjoiZ2hhbXBvd2VydGVzdGluZ0BnbWFpbC5jb20iLCJpYXQiOjE3NDA5MzA5NjMsImV4cCI6MTc0MDkzNDU2M30.-i_-pmrPrg4N8RsUs1QXXeOtBPtzq7iSgmABBh8FKSU';
+
+            (AuthService.login as jest.Mock).mockResolvedValue({
+                user: mockUser,
+                token: mockToken,
+            });
+
+            const response = await request(app).post('/login').send({
+                email: 'test@gmail.com',
+                password: 'testing123',
+            });
+            expect(response.status).toBe(HTTP_STATUS.OK);
+            expect(response.body.message).toBe(SUCCESS_MESSAGES.LOGIN_SUCCESS);
+            expect(response.body.data.user).toEqual(
+                expect.objectContaining({
+                    id: mockUser.id,
+                    email: mockUser.email,
+                    password: mockUser.password,
+                    phone: mockUser.phone,
+                    role: mockUser.role,
+                    authProvider: mockUser.authProvider,
+                    providerId: mockUser.providerId,
+                    verified: mockUser.verified,
+                    verificationToken: mockUser.verificationToken,
+                    //createdAt and updatedAt could be dynamic so its ignored here
+                }),
+            );
+            expect(response.body.data.token).toBe(mockToken);
+        });
+
+        it('should return 400 if email or password is missing', async () => {
+            const response = await request(app)
+                .post('/login')
+                .send({ email: 'test@gmail.com' }); // Missing password
 
             expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
         });

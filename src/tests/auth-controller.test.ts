@@ -17,23 +17,23 @@ app.use(express.json());
 app.post('/register', AuthController.register);
 
 describe('AuthController', () => {
+    let sendEmailMock: jest.SpyInstance;
+
+    beforeAll(() => {
+        sendEmailMock = jest
+            .spyOn(EmailService, 'sendEmail')
+            .mockResolvedValue({ message: 'Email sent successfully' });
+    });
+
+    afterAll(() => {
+        sendEmailMock.mockRestore(); // Cleanup after tests
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     describe('POST /register', () => {
-        let sendEmailMock: jest.SpyInstance;
-
-        beforeAll(() => {
-            sendEmailMock = jest
-                .spyOn(EmailService, 'sendEmail')
-                .mockResolvedValue({ message: 'Email sent successfully' });
-        });
-
-        afterAll(() => {
-            sendEmailMock.mockRestore(); // Cleanup after tests
-        });
-
         it('should return 201 status when a new user with unique email registers', async () => {
             const response = await request(app).post('/register').send({
                 email: 'test@example.com',

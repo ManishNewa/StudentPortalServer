@@ -15,25 +15,26 @@ app.use(express.json());
 
 // Bind the AuthController methods to routes
 app.post('/register', AuthController.register);
+app.post('/resend-verification', AuthController.resendUserVerification);
 
 describe('AuthController', () => {
-    let sendEmailMock: jest.SpyInstance;
-
-    beforeAll(() => {
-        sendEmailMock = jest
-            .spyOn(EmailService, 'sendEmail')
-            .mockResolvedValue({ message: 'Email sent successfully' });
-    });
-
-    afterAll(() => {
-        sendEmailMock.mockRestore(); // Cleanup after tests
-    });
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     describe('POST /register', () => {
+        let sendEmailMock: jest.SpyInstance;
+
+        beforeAll(() => {
+            sendEmailMock = jest
+                .spyOn(EmailService, 'sendEmail')
+                .mockResolvedValue({ message: 'Email sent successfully' });
+        });
+
+        afterAll(() => {
+            sendEmailMock.mockRestore(); // Cleanup after tests
+        });
+
         it('should return 201 status when a new user with unique email registers', async () => {
             const response = await request(app).post('/register').send({
                 email: 'test@example.com',
@@ -54,6 +55,30 @@ describe('AuthController', () => {
             const response = await request(app)
                 .post('/register')
                 .send({ email: 'test@example.com' });
+            expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
+        });
+    });
+
+    describe('POST /resend-verification', () => {
+        it('should resend verification email and return 200 status', async () => {
+            (
+                AuthService.resendRegistrationVerification as jest.Mock
+            ).mockResolvedValue(true);
+
+            const response = await request(app)
+                .post('/resend-verification')
+                .send({ email: 'test@example.com' });
+
+            expect(response.status).toBe(HTTP_STATUS.OK);
+            expect(response.body.message).toBe(
+                SUCCESS_MESSAGES.VERIFICATION_RESENT,
+            );
+        });
+
+        it('should return 400 if email is missing', async () => {
+            const response = await request(app)
+                .post('/resend-verification')
+                .send({});
 
             expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
         });

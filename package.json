@@ -14,7 +14,7 @@
     "sync:lang": "ts-node src/i18n/sync.ts"
   },
   "_moduleAliases": {
-    "@": "src"
+    "@": "dist"
   },
   "keywords": [
     "Student Portal"

@@ -2,10 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.ts",
-  "_moduleAliases": {
-    "@": "src"
-  },
+  "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
@@ -15,6 +12,9 @@
     "migrate:undo": "dotenv -e .env npx sequelize-cli db:migrate:undo",
     "migrate:reset": "dotenv -e .env npx sequelize-cli db:migrate:undo:all && dotenv -e .env npx sequelize-cli db:migrate",
     "sync:lang": "ts-node src/i18n/sync.ts"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   },
   "keywords": [
     "Student Portal"

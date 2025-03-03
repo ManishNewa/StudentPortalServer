@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import 'module-alias/register';
 
 import EmailConfig from '@/config/email';
 
@@ -12,6 +13,8 @@ interface TemplateReplacements {
     [key: string]: string;
 }
 
+const basePath = path.resolve(__dirname, '..');
+
 class EmailService {
     private emailTemplatePath: string;
     private emailTemplate: string;
@@ -20,7 +23,7 @@ class EmailService {
         this.emailTemplatePath = path.resolve(
             __dirname,
             process.env.EMAIL_TEMPLATE_PATH ||
-                '../public/main-email-template.html',
+                path.join(basePath, 'public', 'main-email-template.html'),
         );
 
         try {

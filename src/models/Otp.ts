@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '@/config/db';
 
-import User from './User';
+import User from '@/models/User';
 
 class Otp extends Model {
     public id!: number;

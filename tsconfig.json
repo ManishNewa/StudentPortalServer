@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"]
+        },
         "target": "ES6",
         "module": "commonjs",
         "outDir": "./dist",
@@ -16,8 +20,8 @@
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
         "typeRoots": ["./node_modules/@types", "./src/types"],
-        "types": ["jest"]
+        "types": ["node", "jest"]
     },
-    "include": ["src/**/*", "jest.setup.ts"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
 }

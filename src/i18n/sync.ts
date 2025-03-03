@@ -4,8 +4,8 @@ import {
     translateText,
     getSupportedLanguages,
     getLanguageName,
-} from './translator';
-import { I18nLanguage } from '../interfaces/i18n-interface';
+} from '@/i18n/translator';
+import { I18nLanguage } from '@/interfaces/i18n-interface';
 
 const LOCALES_DIR = path.join(__dirname, '../locales');
 const SOURCE_LANG = 'en';
@@ -52,7 +52,7 @@ async function processLanguage(targetLang: string, languages: I18nLanguage[]) {
 async function processNamespace(
     targetLang: string,
     namespace: string,
-    languages: I18nLanguage[]
+    languages: I18nLanguage[],
 ) {
     const sourceFile = path.join(LOCALES_DIR, SOURCE_LANG, `${namespace}.json`);
     const targetFile = path.join(LOCALES_DIR, targetLang, `${namespace}.json`);

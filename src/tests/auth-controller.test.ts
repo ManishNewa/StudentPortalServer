@@ -1,14 +1,14 @@
 import express from 'express';
 import request from 'supertest';
-import AuthController from '../controllers/auth-controller';
-import EmailService from '../services/email-service';
-import AuthService from '../services/auth-service';
-import User from '../models/User';
 
-import { HTTP_STATUS, SUCCESS_MESSAGES } from '../utils/constants';
-import { UserRole, AuthProvider } from '../utils/enums';
+import AuthController from '@/controllers/auth-controller';
+import EmailService from '@/services/email-service';
+import AuthService from '@/services/auth-service';
+
+import { HTTP_STATUS, SUCCESS_MESSAGES } from '@/utils/constants';
+
 // Mock the AuthService
-jest.mock('../services/auth-service');
+jest.mock('@/services/auth-service');
 
 const app = express();
 app.use(express.json());

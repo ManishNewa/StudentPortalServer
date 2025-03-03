@@ -1,13 +1,13 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import User from '../models/User';
-import GoogleService from './google-service';
-import FacebookService from './facebook-service';
-import OtpService from './otp-service';
-import EmailService from './email-service';
+import User from '@/models/User';
+import GoogleService from '@/services/google-service';
+import FacebookService from '@/services/facebook-service';
+import OtpService from '@/services/otp-service';
+import EmailService from '@/services/email-service';
 
-import { generateVerificationToken } from '../utils';
+import { generateVerificationToken } from '@/utils';
 
 class AuthService {
     // Register a new user

@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
-import '../types/session-types';
+import '@/types/session-types';
 
-import AuthService from '../services/auth-service';
+import AuthService from '@/services/auth-service';
 
-import { SocialLoginRequest, OtpRequest } from '../types/auth-types';
+import { SocialLoginRequest, OtpRequest } from '@/types/auth-types';
 import {
     validateRequestParams,
     handleResponse,
     handleError,
-} from '../utils/response-handler';
-import { HTTP_STATUS, SUCCESS_MESSAGES } from '../utils/constants';
+} from '@/utils/response-handler';
+import { HTTP_STATUS, SUCCESS_MESSAGES } from '@/utils/constants';
 
 class AuthController {
     async register(req: Request, res: Response) {

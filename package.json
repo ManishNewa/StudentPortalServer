@@ -5,7 +5,8 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
-    "build": "npm run migrate:prod && tsc",
+    "build": "tsc",
+    "postbuild": "npx sequelize-cli db:migrate",
     "start": "node dist/server.js",
     "test": "jest",
     "migrate:prod": "dotenv -e .env.production -- npx sequelize-cli db:migrate",

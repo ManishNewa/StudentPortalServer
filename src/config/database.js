@@ -1,6 +1,9 @@
 require('ts-node/register'); // Enable TypeScript support for migrations
+require('dotenv').config()
 
-module.exports = {
+const env = process.env.NODE_ENV || 'development';
+
+const config = {
     development: {
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
@@ -23,3 +26,5 @@ module.exports = {
         dialect: 'mysql',
     },
 };
+
+module.exports = config[env]; 

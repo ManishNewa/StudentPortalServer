@@ -1,6 +1,6 @@
 {
     "functions": {
-        "api/**/*.js": {
+        "dist/**/*.js": {
             "includeFiles": "src/config/certs/ca.pem"
         }
     }
